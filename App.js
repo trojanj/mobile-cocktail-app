@@ -4,7 +4,6 @@ import { Header } from './src/Header';
 import { CocktailSectionList } from './src/CocktailSectionList';
 import axios from './src/axios/axios';
 import { FilterMenu } from './src/FilterMenu';
-import { FilterList } from './src/FilterList';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +13,7 @@ class App extends React.Component {
       categories: [],
       loading: false,
       showFilterMenu: false,
-      activeFilters: []
+      activeCategories: []
     }
   }
 
@@ -65,16 +64,12 @@ class App extends React.Component {
     this.setState(state => ({ ...state, showFilterMenu: !this.state.showFilterMenu }))
   }
 
-  pressFilterHandler = filter => {
-    if (this.state.activeFilters.includes(filter)) {
-      this.setState(state => ({
-        ...state, 
-        activeFilters: this.state.activeFilters.filter(item => item !== filter)}))
-    } else {
-      this.setState(state => ({
-        ...state, 
-        activeFilters: [...this.state.activeFilters, filter]}))
-    }
+  activeCategoriesHandler = activeCategories => {
+    this.setState(state => ({
+      ...state,
+      activeCategories,
+      showFilterMenu: false
+    }))
   }
 
   async componentDidMount() {
@@ -88,7 +83,7 @@ class App extends React.Component {
         categories,
         cocktailSections: [...state.cocktailSections, { title: categories[0], data: cocktails }],
         loading: false,
-        activeFilters: categories
+        activeCategories: categories
       }))
     } catch (e) {
       Alert.alert(`Error: ${e.message}. Please try again later!`);
@@ -103,19 +98,26 @@ class App extends React.Component {
           showFilterMenu={this.state.showFilterMenu}
           showFilterHandler={this.showFilterHandler}
         />
-        {this.state.loading && !this.state.cocktailSections.length
-          ? <ActivityIndicator size={60} color="#7E7E7E" />
-          : <CocktailSectionList
-            cocktailSections={this.state.cocktailSections}
-            onEndReachedHandler={this.onEndReachedHandler}
-          />}
-        {this.state.showFilterMenu && !this.state.loading && <FilterMenu>
-          <FilterList 
+        {
+          this.state.loading && !this.state.cocktailSections.length
+            ? <ActivityIndicator
+              size={60}
+              color="#7E7E7E"
+            />
+            : <CocktailSectionList
+              cocktailSections={this.state.cocktailSections}
+              onEndReachedHandler={this.onEndReachedHandler}
+            />
+        }
+        {
+          this.state.showFilterMenu
+          && !this.state.loading
+          && <FilterMenu
             categories={this.state.categories}
-            pressFilterHandler={this.pressFilterHandler}
-            activeFilters={this.state.activeFilters}
+            activeCategoriesHandler={this.activeCategoriesHandler}
+            activeCategories={this.state.activeCategories}
           />
-        </FilterMenu>}
+        }
       </>
     )
   }

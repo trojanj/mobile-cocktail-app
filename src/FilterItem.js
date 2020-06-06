@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
   filterItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 60
+    paddingVertical: 30
   },
   img: {
-    marginLeft: 5,
+    marginRight: 5,
     width: 25,
     height: 18
   }

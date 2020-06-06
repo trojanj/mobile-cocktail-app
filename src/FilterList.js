@@ -17,7 +17,7 @@ export const FilterList = ({ categories, activeFilters, pressFilterHandler }) =>
 
 const styles = StyleSheet.create({
   filterList: {
-    marginTop: 30,
-    marginHorizontal: 35
+    marginHorizontal: 35,
+    marginBottom: 15
   }
 })
