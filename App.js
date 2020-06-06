@@ -3,6 +3,8 @@ import { ActivityIndicator, Alert } from 'react-native';
 import { Header } from './src/Header';
 import { CocktailSectionList } from './src/CocktailSectionList';
 import axios from './src/axios/axios';
+import { FilterMenu } from './src/FilterMenu';
+import { FilterList } from './src/FilterList';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,7 +12,9 @@ class App extends React.Component {
     this.state = {
       cocktailSections: [],
       categories: [],
-      loading: false
+      loading: false,
+      showFilterMenu: false,
+      activeFilters: []
     }
   }
 
@@ -50,10 +54,26 @@ class App extends React.Component {
           loading: false
         }))
       } else {
-        Alert.alert('')
+        Alert.alert('No more cocktails!');
       }
     } catch (e) {
-      console.log(e)
+      Alert.alert(`Error: ${e.message}. Please try again later!`);
+    }
+  }
+
+  showFilterHandler = () => {
+    this.setState(state => ({ ...state, showFilterMenu: !this.state.showFilterMenu }))
+  }
+
+  pressFilterHandler = filter => {
+    if (this.state.activeFilters.includes(filter)) {
+      this.setState(state => ({
+        ...state, 
+        activeFilters: this.state.activeFilters.filter(item => item !== filter)}))
+    } else {
+      this.setState(state => ({
+        ...state, 
+        activeFilters: [...this.state.activeFilters, filter]}))
     }
   }
 
@@ -67,24 +87,35 @@ class App extends React.Component {
         ...state,
         categories,
         cocktailSections: [...state.cocktailSections, { title: categories[0], data: cocktails }],
-        loading: false
+        loading: false,
+        activeFilters: categories
       }))
     } catch (e) {
-      console.log(e);
+      Alert.alert(`Error: ${e.message}. Please try again later!`);
+      this.setState(state => ({ ...state, loading: false }))
     }
   }
 
   render() {
     return (
       <>
-        <Header />
+        <Header
+          showFilterMenu={this.state.showFilterMenu}
+          showFilterHandler={this.showFilterHandler}
+        />
         {this.state.loading && !this.state.cocktailSections.length
           ? <ActivityIndicator size={60} color="#7E7E7E" />
           : <CocktailSectionList
             cocktailSections={this.state.cocktailSections}
             onEndReachedHandler={this.onEndReachedHandler}
+          />}
+        {this.state.showFilterMenu && !this.state.loading && <FilterMenu>
+          <FilterList 
+            categories={this.state.categories}
+            pressFilterHandler={this.pressFilterHandler}
+            activeFilters={this.state.activeFilters}
           />
-        }
+        </FilterMenu>}
       </>
     )
   }

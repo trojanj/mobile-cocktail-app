@@ -1,14 +1,18 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 
-export const MyAppText = ({ children }) => {
+export const MyAppText = ({ children, style = {} }) => {
   return (
-    <Text style={{
-      fontSize: 16,
-      lineHeight: 19,
-      color: '#7E7E7E'
-    }}>
+    <Text style={[styles.text, style]}>
       {children}
     </Text>
   )
 }
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 16,
+    lineHeight: 19,
+    color: '#7E7E7E'
+  }
+})
