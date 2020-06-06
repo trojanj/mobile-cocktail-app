@@ -2,22 +2,17 @@ import React from 'react';
 import { SectionList, StyleSheet, Text } from 'react-native';
 import {CocktailItem} from './CocktailItem';
 
-const DATA = [
-  {
-    title: "Main dishes",
-    data: ["Pizza", "Burger", "Risotto"]
-  }
-]
-
-export const CocktailList = props => {
+export const CocktailSectionList = ({cocktailSections, onEndReachedHandler}) => {
   return (
     <SectionList
-      sections={DATA}
-      keyExtractor={(item, index) => item + index}
-      renderItem={({item}) => <CocktailItem item={item} />}
+      sections={cocktailSections}
+      keyExtractor={item => item.idDrink}
+      renderItem={({item}) => <CocktailItem cocktailData={item} />}
       renderSectionHeader={({ section: { title } }) => (
         <Text style={styles.header}>{title}</Text>
       )}
+      onEndReachedThreshold={0.7}
+      onEndReached={() => onEndReachedHandler()}
       style={styles.cocktailList}
     />
   )
@@ -25,7 +20,7 @@ export const CocktailList = props => {
 
 const styles = StyleSheet.create({
   cocktailList: {
-    padding: 20
+    padding: 20    
   },
   header: {
     fontSize: 14,

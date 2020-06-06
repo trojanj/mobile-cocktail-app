@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { MyAppText } from './MyAppText';
 
-export const CocktailItem = ({item}) => {
+export const CocktailItem = ({cocktailData}) => {
   return (
     <View style={styles.cocktailItem}>
       <Image 
-        source={{uri: "https://www.thecocktaildb.com/images/media/drink/vrwquq1478252802.jpg/preview"}} 
+        source={{uri: cocktailData.strDrinkThumb}} 
         style={styles.img}
       />
-      <MyAppText>{item}</MyAppText>
+      <MyAppText>{cocktailData.strDrink}</MyAppText>
     </View>
   )
 }
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   img: {
-    width: 50,
-    height: 50
+    width: 100,
+    height: 100,
+    marginRight: 20
   }
 })
