@@ -7,6 +7,7 @@ export const FilterList = ({ categories, activeFilters, pressFilterHandler }) =>
     <View style={styles.filterList}>
       {categories.map(category => (
         <FilterItem
+          key={category}
           category={category}
           activeFilters={activeFilters}
           pressFilterHandler={pressFilterHandler}

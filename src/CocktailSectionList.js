@@ -2,10 +2,14 @@ import React from 'react';
 import { SectionList, StyleSheet, Text } from 'react-native';
 import {CocktailItem} from './CocktailItem';
 
-export const CocktailSectionList = ({cocktailSections, onEndReachedHandler}) => {
+export const CocktailSectionList = ({cocktailSections, onEndReachedHandler, activeCategories}) => {
+  const getRenderSections = sections => {
+    return sections.filter(section => activeCategories.includes(section.title))
+  }
+
   return (
     <SectionList
-      sections={cocktailSections}
+      sections={getRenderSections(cocktailSections)}
       keyExtractor={item => item.idDrink}
       renderItem={({item}) => <CocktailItem cocktailData={item} />}
       renderSectionHeader={({ section: { title } }) => (

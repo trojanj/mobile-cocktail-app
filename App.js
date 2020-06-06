@@ -33,7 +33,7 @@ class App extends React.Component {
   getCocktails = async category => {
     try {
       const response = await axios.get(`/filter.php?c=${category}`);
-      return response.data.drinks.slice(0, 10)
+      return response.data.drinks
     } catch {
       throw new Error('Failed to load data')
     }
@@ -72,6 +72,10 @@ class App extends React.Component {
     }))
   }
 
+  isSectionForRender() {
+    return !!this.state.cocktailSections.find(section => this.state.activeCategories.includes(section.title))
+  }
+
   async componentDidMount() {
     try {
       this.setLoading();
@@ -91,6 +95,25 @@ class App extends React.Component {
     }
   }
 
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.activeCategories !== this.state.activeCategories) {
+      if (!this.isSectionForRender()) {
+        try {
+          this.setLoading();
+          const cocktails = await this.getCocktails(this.state.activeCategories[0]);
+          
+          this.setState(state => ({
+              ...state,
+              cocktailSections: [...state.cocktailSections, { title: state.activeCategories[0], data: cocktails }],
+              loading: false
+            }))
+        } catch (e) {
+          Alert.alert(`Error: ${e.message}. Please try again later!`);
+        }        
+      }
+    }
+  }
+
   render() {
     return (
       <>
@@ -99,7 +122,7 @@ class App extends React.Component {
           showFilterHandler={this.showFilterHandler}
         />
         {
-          this.state.loading && !this.state.cocktailSections.length
+          this.state.loading
             ? <ActivityIndicator
               size={60}
               color="#7E7E7E"
@@ -107,11 +130,11 @@ class App extends React.Component {
             : <CocktailSectionList
               cocktailSections={this.state.cocktailSections}
               onEndReachedHandler={this.onEndReachedHandler}
+              activeCategories={this.state.activeCategories}
             />
         }
         {
           this.state.showFilterMenu
-          && !this.state.loading
           && <FilterMenu
             categories={this.state.categories}
             activeCategoriesHandler={this.activeCategoriesHandler}
