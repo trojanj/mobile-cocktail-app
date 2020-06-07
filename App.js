@@ -13,6 +13,7 @@ class App extends React.Component {
       categories: [],
       loading: false,
       showFilterMenu: false,
+      alert: false,
       activeCategories: []
     }
   }
@@ -33,7 +34,7 @@ class App extends React.Component {
   getCocktails = async category => {
     try {
       const response = await axios.get(`/filter.php?c=${category}`);
-      return response.data.drinks
+      return response.data.drinks.slice(0,10)
     } catch {
       throw new Error('Failed to load data')
     }
@@ -41,9 +42,9 @@ class App extends React.Component {
 
   onEndReachedHandler = async () => {
     try {
+      const category = this.state.categories[this.state.cocktailSections.length];
       this.setLoading();
 
-      const category = this.state.categories[this.state.cocktailSections.length];
       if (category) {
         const cocktails = await this.getCocktails(category);
 
@@ -52,8 +53,12 @@ class App extends React.Component {
           cocktailSections: [...state.cocktailSections, { title: category, data: cocktails }],
           loading: false
         }))
-      } else {
-        Alert.alert('No more cocktails!');
+      } else if (!this.state.alert) {
+          this.setState(state => ({
+            ...state,
+            alert: true
+          }))
+          Alert.alert('No more cocktails!'); 
       }
     } catch (e) {
       Alert.alert(`Error: ${e.message}. Please try again later!`);
@@ -68,7 +73,8 @@ class App extends React.Component {
     this.setState(state => ({
       ...state,
       activeCategories,
-      showFilterMenu: false
+      showFilterMenu: false,
+      alert: false
     }))
   }
 
@@ -92,7 +98,7 @@ class App extends React.Component {
     } catch (e) {
       Alert.alert(`Error: ${e.message}. Please try again later!`);
       this.setState(state => ({ ...state, loading: false }))
-    }
+    }   
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -109,6 +115,7 @@ class App extends React.Component {
             }))
         } catch (e) {
           Alert.alert(`Error: ${e.message}. Please try again later!`);
+          this.setState(state => ({ ...state, loading: false }))
         }        
       }
     }
@@ -122,7 +129,7 @@ class App extends React.Component {
           showFilterHandler={this.showFilterHandler}
         />
         {
-          this.state.loading
+          this.state.loading && !this.isSectionForRender()
             ? <ActivityIndicator
               size={60}
               color="#7E7E7E"

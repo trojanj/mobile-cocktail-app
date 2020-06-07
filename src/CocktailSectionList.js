@@ -11,12 +11,13 @@ export const CocktailSectionList = ({cocktailSections, onEndReachedHandler, acti
     <SectionList
       sections={getRenderSections(cocktailSections)}
       keyExtractor={item => item.idDrink}
-      renderItem={({item}) => <CocktailItem cocktailData={item} />}
+      renderItem={({item, index}) => <CocktailItem cocktailData={item} index={index} />}
       renderSectionHeader={({ section: { title } }) => (
         <Text style={styles.header}>{title}</Text>
       )}
       onEndReachedThreshold={0.7}
       onEndReached={() => onEndReachedHandler()}
+      initialNumToRender={21}
       style={styles.cocktailList}
     />
   )
