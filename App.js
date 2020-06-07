@@ -43,9 +43,9 @@ class App extends React.Component {
   onEndReachedHandler = async () => {
     try {
       const category = this.state.activeCategories[this.state.cocktailSections.length];
-      this.setLoading();
 
       if (category) {
+        this.setLoading();
         const cocktails = await this.getCocktails(category);
 
         this.setState(state => ({
@@ -58,10 +58,11 @@ class App extends React.Component {
           ...state,
           alert: true
         }))
-        Alert.alert('The end of the list. No more cocktails.');
+        Alert.alert('No more cocktail lists.');
       }
     } catch (e) {
       Alert.alert(`Error: ${e.message}`);
+      this.setState(state => ({ ...state, loading: false }))
     }
   }
 
@@ -70,15 +71,20 @@ class App extends React.Component {
   }
 
   onApplyHandler = activeCategories => {
-    this.setState(state => ({
-      ...state,
-      activeCategories: state.categories.filter(category => activeCategories.includes(category)),
-      showFilterMenu: false,
-      alert: false,
-      cocktailSections: state.cocktailSections[0].title === state.categories.find(category => activeCategories.includes(category))
-        ? [state.cocktailSections[0]]
-        : []
-    }))
+    if (!activeCategories.length) {
+      Alert.alert('Please choose some filters!')
+    } else {
+      this.setState(state => ({
+        ...state,
+        activeCategories: state.categories.filter(category => activeCategories.includes(category)),
+        showFilterMenu: false,
+        alert: false,
+        cocktailSections: state.cocktailSections[0]
+          && state.cocktailSections[0].title === state.categories.find(category => activeCategories.includes(category))
+          ? [state.cocktailSections[0]]
+          : []
+      }))
+    }
   }
 
   async componentDidMount() {
@@ -101,7 +107,10 @@ class App extends React.Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (prevState.activeCategories !== this.state.activeCategories && !this.state.cocktailSections.length) {
+    if (this.state.activeCategories.length
+      && prevState.activeCategories !== this.state.activeCategories
+      && !this.state.cocktailSections.length
+    ) {
       try {
         this.setLoading();
         const cocktails = await this.getCocktails(this.state.activeCategories[0]);
@@ -117,6 +126,8 @@ class App extends React.Component {
       }
     }
   }
+
+
 
   render() {
     return (
@@ -134,6 +145,8 @@ class App extends React.Component {
             : <CocktailSectionList
               cocktailSections={this.state.cocktailSections}
               onEndReachedHandler={this.onEndReachedHandler}
+              activeCategories={this.state.activeCategories}
+              loading={this.state.loading}
             />
         }
         {
