@@ -34,7 +34,7 @@ class App extends React.Component {
   getCocktails = async category => {
     try {
       const response = await axios.get(`/filter.php?c=${category}`);
-      return response.data.drinks.slice(0, 10)
+      return response.data.drinks
     } catch {
       throw new Error('Failed to load data')
     }

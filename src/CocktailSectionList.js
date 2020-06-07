@@ -8,7 +8,7 @@ export const CocktailSectionList = ({cocktailSections, onEndReachedHandler, acti
     <SectionList
       sections={cocktailSections}
       keyExtractor={item => item.idDrink}
-      renderItem={({item, index}) => <CocktailItem cocktailData={item} index={index} />}
+      renderItem={({item}) => <CocktailItem cocktailData={item} />}
       renderSectionHeader={({ section: { title } }) => (
         <Text style={styles.header}>{title}</Text>
       )}
