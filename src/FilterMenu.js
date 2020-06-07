@@ -7,24 +7,24 @@ export class FilterMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeFilters: []
+      activeCategories: []
     }
   }
 
   pressFilterHandler = filter => {
-    if (this.state.activeFilters.includes(filter)) {
+    if (this.state.activeCategories.includes(filter)) {
       this.setState(state => ({
-        activeFilters: state.activeFilters.filter(item => item !== filter)
+        activeCategories: state.activeCategories.filter(item => item !== filter)
       }))
     } else {
       this.setState(state => ({
-        activeFilters: [...state.activeFilters, filter]
+        activeCategories: [...state.activeCategories, filter]
       }))
     }
   }
 
   componentDidMount() {
-    this.setState({ activeFilters: this.props.activeCategories })
+    this.setState({ activeCategories: this.props.activeCategories })
   }
 
   render() {
@@ -33,12 +33,12 @@ export class FilterMenu extends React.Component {
         <FilterList
           categories={this.props.categories}
           pressFilterHandler={this.pressFilterHandler}
-          activeFilters={this.state.activeFilters}
+          activeCategories={this.state.activeCategories}
         />
         <TouchableOpacity
           style={styles.btn}
           activeOpacity={0.8}
-          onPress={() => this.props.activeCategoriesHandler(this.state.activeFilters)}
+          onPress={() => this.props.onApplyHandler(this.state.activeCategories)}
         >
           <MyAppText style={styles.text}>APPLY</MyAppText>
         </TouchableOpacity>

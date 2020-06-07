@@ -34,7 +34,7 @@ class App extends React.Component {
   getCocktails = async category => {
     try {
       const response = await axios.get(`/filter.php?c=${category}`);
-      return response.data.drinks.slice(0,10)
+      return response.data.drinks.slice(0, 10)
     } catch {
       throw new Error('Failed to load data')
     }
@@ -42,7 +42,7 @@ class App extends React.Component {
 
   onEndReachedHandler = async () => {
     try {
-      const category = this.state.categories[this.state.cocktailSections.length];
+      const category = this.state.activeCategories[this.state.cocktailSections.length];
       this.setLoading();
 
       if (category) {
@@ -53,15 +53,15 @@ class App extends React.Component {
           cocktailSections: [...state.cocktailSections, { title: category, data: cocktails }],
           loading: false
         }))
-      } else if (!this.state.alert) {
-          this.setState(state => ({
-            ...state,
-            alert: true
-          }))
-          Alert.alert('No more cocktails!'); 
+      } else if (!category && !this.state.alert) {
+        this.setState(state => ({
+          ...state,
+          alert: true
+        }))
+        Alert.alert('No more cocktails!');
       }
     } catch (e) {
-      Alert.alert(`Error: ${e.message}. Please try again later!`);
+      Alert.alert(`Error: ${e.message}!`);
     }
   }
 
@@ -69,17 +69,16 @@ class App extends React.Component {
     this.setState(state => ({ ...state, showFilterMenu: !this.state.showFilterMenu }))
   }
 
-  activeCategoriesHandler = activeCategories => {
+  onApplyHandler = activeCategories => {
     this.setState(state => ({
       ...state,
       activeCategories,
       showFilterMenu: false,
-      alert: false
+      alert: false,
+      cocktailSections: state.cocktailSections.find(section => section.title === activeCategories[0])
+        ? [state.cocktailSections.find(section => section.title === activeCategories[0])]
+        : []
     }))
-  }
-
-  isSectionForRender() {
-    return !!this.state.cocktailSections.find(section => this.state.activeCategories.includes(section.title))
   }
 
   async componentDidMount() {
@@ -91,33 +90,31 @@ class App extends React.Component {
       this.setState(state => ({
         ...state,
         categories,
-        cocktailSections: [...state.cocktailSections, { title: categories[0], data: cocktails }],
+        cocktailSections: [{ title: categories[0], data: cocktails }],
         loading: false,
         activeCategories: categories
       }))
     } catch (e) {
       Alert.alert(`Error: ${e.message}. Please try again later!`);
       this.setState(state => ({ ...state, loading: false }))
-    }   
+    }
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if (prevState.activeCategories !== this.state.activeCategories) {
-      if (!this.isSectionForRender()) {
+    if (prevState.activeCategories !== this.state.activeCategories && !this.state.cocktailSections.length) {
         try {
           this.setLoading();
           const cocktails = await this.getCocktails(this.state.activeCategories[0]);
-          
+
           this.setState(state => ({
-              ...state,
-              cocktailSections: [...state.cocktailSections, { title: state.activeCategories[0], data: cocktails }],
-              loading: false
-            }))
+            ...state,
+            cocktailSections: [{ title: state.activeCategories[0], data: cocktails }],
+            loading: false
+          }))
         } catch (e) {
           Alert.alert(`Error: ${e.message}. Please try again later!`);
           this.setState(state => ({ ...state, loading: false }))
-        }        
-      }
+        }
     }
   }
 
@@ -129,7 +126,7 @@ class App extends React.Component {
           showFilterHandler={this.showFilterHandler}
         />
         {
-          this.state.loading && !this.isSectionForRender()
+          this.state.loading && !this.state.cocktailSections[0]
             ? <ActivityIndicator
               size={60}
               color="#7E7E7E"
@@ -144,7 +141,7 @@ class App extends React.Component {
           this.state.showFilterMenu
           && <FilterMenu
             categories={this.state.categories}
-            activeCategoriesHandler={this.activeCategoriesHandler}
+            onApplyHandler={this.onApplyHandler}
             activeCategories={this.state.activeCategories}
           />
         }
