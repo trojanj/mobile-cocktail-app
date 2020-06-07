@@ -72,12 +72,12 @@ class App extends React.Component {
   onApplyHandler = activeCategories => {
     this.setState(state => ({
       ...state,
-      activeCategories,
+      activeCategories: state.categories.filter(category => activeCategories.includes(category)),
       showFilterMenu: false,
       alert: false,
-      cocktailSections: state.cocktailSections.find(section => section.title === activeCategories[0])
-        ? [state.cocktailSections.find(section => section.title === activeCategories[0])]
-        : []
+      cocktailSections: state.cocktailSections[0].title === state.categories.find(category => activeCategories.includes(category)) 
+      ? [state.cocktailSections[0]]
+      : []
     }))
   }
 

@@ -4,7 +4,6 @@ import { MyAppText } from './MyAppText';
 
 export class CocktailItem extends React.PureComponent {
   render() {
-    // console.log(this.props.index)
     return (
       <View style={styles.cocktailItem}>
         <Image 
