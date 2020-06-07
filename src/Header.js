@@ -23,30 +23,36 @@ export const Header = ({ showFilterMenu, showFilterHandler }) => {
     <Text style={[styles.text, styles.filterText]}>Filters</Text>
   </>)
 
-return (
-  <View style={[styles.header, !showFilterMenu && styles.mainHeader]}>
-    {showFilterMenu ? FilterHeader : MainHeader}
-  </View>
-)
+  return (
+    <View style={styles.container}>
+      <View style={[styles.header, !showFilterMenu && styles.mainHeader]}>
+        {showFilterMenu ? FilterHeader : MainHeader}
+      </View>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
+  container: { 
+    overflow: 'hidden', 
+    paddingBottom: 5 
+  },
   header: {
-    height: 85,
+    height: 90,
     zIndex: 2,
     paddingHorizontal: 20,
-    paddingTop: 15,
+    paddingTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 5,
     },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    borderBottomColor: 'white',
-    elevation: 4
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+    backgroundColor: 'white'
   },
   mainHeader: {
     justifyContent: 'space-between',
