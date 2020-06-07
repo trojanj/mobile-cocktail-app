@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FilterItem } from './FilterItem';
 
-export const FilterList = ({ categories, activeFilters, pressFilterHandler }) => {
+export const FilterList = ({ categories, activeCategories, pressFilterHandler }) => {
   return (
     <View style={styles.filterList}>
       {categories.map(category => (
         <FilterItem
           key={category}
           category={category}
-          activeFilters={activeFilters}
+          activeCategories={activeCategories}
           pressFilterHandler={pressFilterHandler}
         />))}
     </View>

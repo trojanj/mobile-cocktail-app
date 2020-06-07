@@ -3,13 +3,10 @@ import { SectionList, StyleSheet, Text } from 'react-native';
 import {CocktailItem} from './CocktailItem';
 
 export const CocktailSectionList = ({cocktailSections, onEndReachedHandler, activeCategories}) => {
-  const getRenderSections = sections => {
-    return sections.filter(section => activeCategories.includes(section.title))
-  }
 
   return (
     <SectionList
-      sections={getRenderSections(cocktailSections)}
+      sections={cocktailSections}
       keyExtractor={item => item.idDrink}
       renderItem={({item}) => <CocktailItem cocktailData={item} />}
       renderSectionHeader={({ section: { title } }) => (
@@ -17,6 +14,7 @@ export const CocktailSectionList = ({cocktailSections, onEndReachedHandler, acti
       )}
       onEndReachedThreshold={0.7}
       onEndReached={() => onEndReachedHandler()}
+      initialNumToRender={15}
       style={styles.cocktailList}
     />
   )

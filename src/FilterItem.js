@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { MyAppText } from './MyAppText';
 
-export const FilterItem = ({category, activeFilters, pressFilterHandler}) => {
+export const FilterItem = ({category, activeCategories, pressFilterHandler}) => {
   return (
     <TouchableOpacity 
       style={styles.filterItem}
@@ -10,7 +10,7 @@ export const FilterItem = ({category, activeFilters, pressFilterHandler}) => {
       onPress={() => pressFilterHandler(category)}
     >
       <MyAppText>{category}</MyAppText>
-      {activeFilters.includes(category) && <Image
+      {activeCategories.includes(category) && <Image
         source={require('../assets/check-icon.png')}
         style={styles.img}
       />}
