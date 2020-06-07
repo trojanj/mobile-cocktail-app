@@ -6,11 +6,11 @@ export class CocktailItem extends React.PureComponent {
   render() {
     return (
       <View style={styles.cocktailItem}>
-        <Image 
-          source={{uri: this.props.cocktailData.strDrinkThumb}} 
+        <Image
+          source={{ uri: this.props.src }}
           style={styles.img}
         />
-        <MyAppText>{this.props.cocktailData.strDrink}</MyAppText>
+        <MyAppText>{this.props.title}</MyAppText>
       </View>
     )
   }

@@ -27,7 +27,7 @@ class App extends React.Component {
       const response = await axios.get('/list.php?c=list');
       return response.data.drinks.map(category => category.strCategory);
     } catch {
-      throw new Error('Failed to load data')
+      throw new Error('Failed to load data!')
     }
   }
 
@@ -36,7 +36,7 @@ class App extends React.Component {
       const response = await axios.get(`/filter.php?c=${category}`);
       return response.data.drinks
     } catch {
-      throw new Error('Failed to load data')
+      throw new Error('Failed to load data!')
     }
   }
 
@@ -58,10 +58,10 @@ class App extends React.Component {
           ...state,
           alert: true
         }))
-        Alert.alert('No more cocktails!');
+        Alert.alert('The end of the list. No more cocktails.');
       }
     } catch (e) {
-      Alert.alert(`Error: ${e.message}!`);
+      Alert.alert(`Error: ${e.message}`);
     }
   }
 
@@ -75,9 +75,9 @@ class App extends React.Component {
       activeCategories: state.categories.filter(category => activeCategories.includes(category)),
       showFilterMenu: false,
       alert: false,
-      cocktailSections: state.cocktailSections[0].title === state.categories.find(category => activeCategories.includes(category)) 
-      ? [state.cocktailSections[0]]
-      : []
+      cocktailSections: state.cocktailSections[0].title === state.categories.find(category => activeCategories.includes(category))
+        ? [state.cocktailSections[0]]
+        : []
     }))
   }
 
@@ -95,26 +95,26 @@ class App extends React.Component {
         activeCategories: categories
       }))
     } catch (e) {
-      Alert.alert(`Error: ${e.message}. Please try again later!`);
+      Alert.alert(`Error: ${e.message}`);
       this.setState(state => ({ ...state, loading: false }))
     }
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (prevState.activeCategories !== this.state.activeCategories && !this.state.cocktailSections.length) {
-        try {
-          this.setLoading();
-          const cocktails = await this.getCocktails(this.state.activeCategories[0]);
+      try {
+        this.setLoading();
+        const cocktails = await this.getCocktails(this.state.activeCategories[0]);
 
-          this.setState(state => ({
-            ...state,
-            cocktailSections: [{ title: state.activeCategories[0], data: cocktails }],
-            loading: false
-          }))
-        } catch (e) {
-          Alert.alert(`Error: ${e.message}. Please try again later!`);
-          this.setState(state => ({ ...state, loading: false }))
-        }
+        this.setState(state => ({
+          ...state,
+          cocktailSections: [{ title: state.activeCategories[0], data: cocktails }],
+          loading: false
+        }))
+      } catch (e) {
+        Alert.alert(`Error: ${e.message}`);
+        this.setState(state => ({ ...state, loading: false }))
+      }
     }
   }
 
@@ -134,7 +134,6 @@ class App extends React.Component {
             : <CocktailSectionList
               cocktailSections={this.state.cocktailSections}
               onEndReachedHandler={this.onEndReachedHandler}
-              activeCategories={this.state.activeCategories}
             />
         }
         {

@@ -2,9 +2,9 @@ import React from 'react';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { MyAppText } from './MyAppText';
 
-export const FilterItem = ({category, activeCategories, pressFilterHandler}) => {
+export const FilterItem = ({ category, activeCategories, pressFilterHandler }) => {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.filterItem}
       activeOpacity={0.8}
       onPress={() => pressFilterHandler(category)}
